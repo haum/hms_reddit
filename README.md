@@ -1,3 +1,8 @@
+# reddithaum, un bot IRC pour Reddit
+
+Un petit bot IRC qui poste les derniers liens postés sur le Reddit sur le canal
+IRC du HAUM.
+
 ## Ressources
 
  - [twisted irc bot sample(ssl)](https://gist.github.com/shnmorimoto/1717671)
