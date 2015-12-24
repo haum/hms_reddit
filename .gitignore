@@ -1,4 +1,4 @@
-*.pyc
 *.swp
 posted
 venv
+__pycache__
