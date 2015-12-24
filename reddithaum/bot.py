@@ -68,7 +68,7 @@ class MyBot(irc.bot.SingleServerIRCBot):
         submissions = get_submissions()
 
         for x in submissions:
-            m = "[{}] {} -> {}".format(x.id, x.title, x.url)
+            m = "[{}] {} -> {}".format(x.author.name, x.title, x.url)
             get_logger().info("Posting {}".format(x.id))
             serv.privmsg(self.channel, m)
             get_logger().info("Marking {} as posted".format(x.id))

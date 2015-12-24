@@ -9,9 +9,18 @@ Nothing.
 
 ## [1.0] - 2015-12-24
 
+### Added
+
+ - Display name of submitter on IRC
+
 ### Changed
 
  - Using Python 3 instead of Python 2.
+ - Using Python's `logging` library instead of custom MessageLog class.
+
+### Removed
+
+ - Display of post id on IRC
 
 ## [0.2] - 2015-12-24
 
