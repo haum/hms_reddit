@@ -20,72 +20,55 @@
 
 import sys
 
-from twisted.words.protocols import irc
-from twisted.internet.protocol import ClientFactory
-from twisted.internet import reactor
-
-from logger import MessageLogger
-from reddit import get_submissions
+import irc.bot
 
 import settings
+from logger import MessageLogger
 from reddit import mark_posted, get_submissions
 
 
-class LogBot(irc.IRCClient):
-    """A logging IRC bot."""
+class MyBot(irc.bot.SingleServerIRCBot):
 
-    nickname = settings.NICKNAME
+    """A Reddit checker bot."""
 
-    def connectionMade(self):
-        """Called when bot has connected."""
-        self.logger = self.factory.logger
-        irc.IRCClient.connectionMade(self)
-        self.logger.log("connected")
+    def __init__(self, channel, nickname, server, port=6667):
+        super().__init__([(server, port)], nickname, nickname)
+        self.channel = channel
+        self.logger = MessageLogger(sys.stdout)
 
-    def connectionLost(self, reason):
-        """Called when bot has disconnected."""
-        irc.IRCClient.connectionLost(self, reason)
-        self.logger.log("disconnected")
 
-    def signedOn(self):
-        """Called when bot has succesfully signed on to server."""
+    def on_welcome(self, serv, ev):
         self.logger.log("signed on")
-        self.logger.log("joining {}".format(self.factory.channel))
-        self.join(self.factory.channel)
+        self.logger.log("joining {}".format(self.channel))
+        serv.join(self.channel)
 
-    def joined(self, channel):
-        """This will get called when the bot joins the channel."""
-        self.logger.log("joined {}".format(channel))
-        self.check_submissions()
 
-    def check_submissions(self):
+    def on_join(self, serv, ev):
+        self.logger.log("joined {}".format(self.channel))
+        self.connection.execute_every(settings.SLEEP, self._check_submissions, (serv,))
+        self._check_submissions(serv)
+
+
+    def on_kick(self, serv, ev):
+        die('got kicked')
+        #serv.join(self.channel)
+
+
+    def on_nicknameinuse(self, serv, ev):
+        newnick = serv.get_nickname() + '_'
+        self.logger.log("nick in use, using {}".format(newnick))
+        serv.nick(newnick)
+
+
+    def _check_submissions(self, serv):
         self.logger.log("checking for new submissions ({})".format(settings.USER_AGENT))
         submissions = get_submissions()
 
         for x in submissions:
-            m = u"[{}] {} -> {}".format(x.id, x.title, x.url).encode('utf-8')
-            self.msg(settings.CHAN, m)
-            self.logger.log("posting and marking as posted {}".format(x.id))
+            m = "[{}] {} -> {}".format(x.id, x.title, x.url)
+            self.logger.log("posting {}".format(x.id))
+            serv.privmsg(self.channel, m)
+            self.logger.log("marking {} as posted".format(x.id))
             mark_posted(x)
 
-        self.logger.log("finished, waiting for {}s".format(settings.SLEEP))
-        reactor.callLater(60, self.check_submissions)
-
-
-
-class LogBotFactory(ClientFactory):
-    """A factory for LogBots.
-    A new protocol instance will be created each time we connect to the server.
-    """
-    protocol = LogBot
-
-    def __init__(self):
-        self.channel = settings.CHAN
-        self.logger = MessageLogger(sys.stdout)
-
-    def clientConnectionLost(self, connector, reason):
-        """If we get disconnected, reconnect to server."""
-        connector.connect()
-
-    def clientConnectionFailed(self, connector, reason):
-        reactor.stop()
+        self.logger.log("finished checking new submissions")

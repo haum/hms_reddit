@@ -18,11 +18,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from twisted.internet import reactor
+import logging
 
-from bot import LogBotFactory
+from bot import MyBot
+import settings
 
 
 if __name__ == "__main__":
-    reactor.connectTCP("irc.freenode.net", 6667, LogBotFactory())
-    reactor.run()
+    logging.basicConfig(format='%(asctime)-15s %(message)s')
+    bot = MyBot(settings.CHAN, settings.NICKNAME, settings.SERVER)
+    bot.start()
