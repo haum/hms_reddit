@@ -1,25 +1,29 @@
-# reddithaum, un bot IRC pour Reddit
+# reddithaum
 
-Un petit bot IRC qui poste les derniers liens postés sur le Reddit sur le canal
-IRC du HAUM.
+A small IRC bot that post the latest Reddit submissions on an IRC channel.
 
-## Utilisation
+## Using
 
-Création d’un environnement virtuel Python 2 :
+Create a Python 2 virtualenv:
 
     $ virtualenv -ppython2 venv
 
-Activation de l’environnement virtuel :
+Activate virtualenv:
 
     $ source venv/bin/activate
 
-Installation des dépendances :
+Install dependencies:
 
     (venv) $ pip install -r requirements.txt
 
-Lancement :
+Finally start the bot:
 
     $ python reddithaum/main.py
+
+## License
+
+This project is brought to you under MIT license. For further information,
+please read the provided LICENSE file.
 
 ## Ressources
 
