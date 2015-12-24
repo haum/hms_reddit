@@ -25,6 +25,8 @@ import settings
 
 
 if __name__ == "__main__":
-    logging.basicConfig(format='%(asctime)-15s %(message)s')
+    logging.basicConfig(format='%(asctime)-15s [%(levelname)s] (%(name)s) %(message)s', level=logging.INFO)
     bot = MyBot(settings.CHAN, settings.NICKNAME, settings.SERVER)
+
+    logging.info('Starting bot')
     bot.start()
