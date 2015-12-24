@@ -5,6 +5,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
+Nothing.
+
+## [1.0] - 2015-12-24
+
 ### Changed
 
  - Using Python 3 instead of Python 2.

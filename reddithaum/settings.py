@@ -1,5 +1,3 @@
-# coding: utf-8
-#
 # Copyright (c) 2015 Romain Porte (MicroJoe)
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,4 +22,4 @@
 SLEEP = 60
 CHAN = "#haum" # ne pas oublier le dièse avant
 NICKNAME = "reddithaum"
-USER_AGENT = 'linux:org.haum.reddithaum:v0.1 (by /u/MicroJoe)'
+USER_AGENT = 'linux:org.haum.reddithaum:v1.0 (by /u/MicroJoe)'
