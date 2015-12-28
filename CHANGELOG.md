@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 
-Nothing.
+ - Handling reddit downtimes
 
 ## [1.0] - 2015-12-24
 
