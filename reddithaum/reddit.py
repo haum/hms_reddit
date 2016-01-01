@@ -23,18 +23,10 @@ import praw
 import settings
 
 
-def get_logger():
-    return logging.getLogger(__name__)
-
-
 def get_submissions():
-    try:
-        r = praw.Reddit(user_agent=settings.USER_AGENT)
-        submissions = r.get_subreddit('haum').get_hot(limit=5)
-        return filter(lambda x: not already_posted(x), submissions)
-    except praw.errors.HTTPException:
-        get_logger().warning("Could not retrieve data from Reddit (HTTP error)")
-        return []
+    r = praw.Reddit(user_agent=settings.USER_AGENT)
+    submissions = r.get_subreddit('haum').get_hot(limit=5)
+    return filter(lambda x: not already_posted(x), submissions)
 
 def already_posted(sub):
     with open('posted') as f:

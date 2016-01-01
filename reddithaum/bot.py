@@ -19,9 +19,10 @@
 # THE SOFTWARE.
 
 import sys
-
 import logging
+
 import irc.bot
+import praw
 
 import settings
 from reddit import mark_posted, get_submissions
@@ -67,11 +68,14 @@ class MyBot(irc.bot.SingleServerIRCBot):
         get_logger().info("Checking for new submissions ({})".format(settings.USER_AGENT))
         submissions = get_submissions()
 
-        for x in submissions:
-            m = "[{}] {} -> {}".format(x.author.name, x.title, x.url)
-            get_logger().info("Posting {}".format(x.id))
-            serv.privmsg(self.channel, m)
-            get_logger().info("Marking {} as posted".format(x.id))
-            mark_posted(x)
+        try:
+            for x in submissions:
+                m = "[{}] {} -> {}".format(x.author.name, x.title, x.url)
+                get_logger().info("Posting {}".format(x.id))
+                serv.privmsg(self.channel, m)
+                get_logger().info("Marking {} as posted".format(x.id))
+                mark_posted(x)
+        except praw.errors.HTTPException:
+            get_logger().warning("Could not retrieve data from Reddit (HTTP error)")
 
         get_logger().info("Finished checking new submissions")
