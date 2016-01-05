@@ -23,10 +23,16 @@ import logging
 from bot import MyBot
 import settings
 
+from requests.exceptions import ReadTimeout
+
 
 if __name__ == "__main__":
     logging.basicConfig(format='%(asctime)-15s [%(levelname)s] (%(name)s) %(message)s', level=logging.INFO)
     bot = MyBot(settings.CHAN, settings.NICKNAME, settings.SERVER)
 
-    logging.info('Starting bot')
-    bot.start()
+    while True:
+        try:
+            logging.info('Starting bot')
+            bot.start()
+        except ReadTimeout:
+            logging.error('Read timeout, restarting bot.')
