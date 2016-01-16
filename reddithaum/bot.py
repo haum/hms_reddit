@@ -25,6 +25,7 @@ import irc.bot
 import praw
 
 import settings
+from security import VeganWatchdog
 from reddit import mark_posted, get_submissions
 
 
@@ -39,6 +40,7 @@ class MyBot(irc.bot.SingleServerIRCBot):
     def __init__(self, channel, nickname, server, port=6667):
         super().__init__([(server, port)], nickname, nickname)
         self.channel = channel
+        self.rwatchdog = VeganWatchdog(settings.RWDT)
 
 
     def on_welcome(self, serv, ev):
@@ -65,6 +67,12 @@ class MyBot(irc.bot.SingleServerIRCBot):
 
 
     def _check_submissions(self, serv):
+        try:
+            self.rwatchdog.feed()
+        except RuntimeError:
+            get_logger().warning("Reverse watchdog interrupted get request")
+            return
+
         get_logger().info("Checking for new submissions ({})".format(settings.USER_AGENT))
         submissions = get_submissions()
 

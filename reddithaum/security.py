@@ -18,12 +18,20 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from datetime import timedelta
+from datetime import datetime
 
-SLEEP = timedelta(seconds=60)
-RWDT = SLEEP - timedelta(seconds=1) # reverse watch dog timer
+class VeganWatchdog():
 
-CHAN = "#testhaum" # ne pas oublier le dièse avant
-NICKNAME = "reddithaum"
-USER_AGENT = 'linux:org.haum.reddithaum:v1.0 (by /u/MicroJoe)'
-SERVER = 'irc.freenode.net'
+    """A reverse watchdog that will fail if triggerred too much"""
+
+    def __init__(self, mintime):
+        self.mintime = mintime
+        self.last_call = None
+
+    def feed(self):
+        now = datetime.now()
+
+        if self.last_call is not None and now - self.last_call < self.mintime:
+            raise RuntimeError
+
+        self.last_call = now
