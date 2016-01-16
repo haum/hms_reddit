@@ -16,9 +16,9 @@ Install dependencies:
 
     (venv) $ pip install -r requirements.txt
 
-Finally start the bot:
+Finally start the bot when you are in the repository root folder:
 
-    $ python reddithaum/main.py
+    $ python reddithaum
 
 ## License
 
