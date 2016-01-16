@@ -23,7 +23,7 @@ from datetime import timedelta
 SLEEP = timedelta(seconds=60)
 RWDT = SLEEP - timedelta(seconds=1) # reverse watch dog timer
 
-CHAN = "#testhaum" # ne pas oublier le dièse avant
+CHAN = "#haum" # ne pas oublier le dièse avant
 NICKNAME = "reddithaum"
-USER_AGENT = 'linux:org.haum.reddithaum:v1.0 (by /u/MicroJoe)'
+USER_AGENT = 'linux:org.haum.reddithaum:v1.1 (by /u/MicroJoe)'
 SERVER = 'irc.freenode.net'
