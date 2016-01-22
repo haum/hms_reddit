@@ -18,7 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import sys
 import logging
 
 import irc.bot
@@ -42,29 +41,26 @@ class MyBot(irc.bot.SingleServerIRCBot):
         self.channel = channel
         self.rwatchdog = VeganWatchdog(settings.RWDT)
 
-
     def on_welcome(self, serv, ev):
         get_logger().info("Signed on")
         get_logger().info("Joining {}".format(self.channel))
         serv.join(self.channel)
 
-
     def on_join(self, serv, ev):
         get_logger().info("Joined {}".format(self.channel))
-        self.connection.execute_every(settings.SLEEP, self._check_submissions, (serv,))
+        self.connection.execute_every(
+            settings.SLEEP, self._check_submissions, (serv,))
         self._check_submissions(serv)
 
-
     def on_kick(self, serv, ev):
-        die('got kicked')
-        #serv.join(self.channel)
-
+        get_logger().warning("Kicked")
+        self.die('got kicked')
+        # serv.join(self.channel)
 
     def on_nicknameinuse(self, serv, ev):
         newnick = serv.get_nickname() + '_'
         get_logger().warning("Nick already in use, using {}".format(newnick))
         serv.nick(newnick)
-
 
     def _check_submissions(self, serv):
         try:
@@ -73,7 +69,8 @@ class MyBot(irc.bot.SingleServerIRCBot):
             get_logger().warning("Reverse watchdog interrupted get request")
             return
 
-        get_logger().info("Checking for new submissions ({})".format(settings.USER_AGENT))
+        get_logger().info(
+            "Checking for new submissions ({})".format(settings.USER_AGENT))
         submissions = get_submissions()
 
         try:
@@ -84,6 +81,7 @@ class MyBot(irc.bot.SingleServerIRCBot):
                 get_logger().info("Marking {} as posted".format(x.id))
                 mark_posted(x)
         except praw.errors.HTTPException:
-            get_logger().warning("Could not retrieve data from Reddit (HTTP error)")
+            get_logger().warning(
+                "Could not retrieve data from Reddit (HTTP error)")
 
         get_logger().info("Finished checking new submissions")
