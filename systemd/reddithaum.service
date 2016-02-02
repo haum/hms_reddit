@@ -9,3 +9,6 @@ User=reddithaum
 ExecStart=/home/reddithaum/reddithaum/systemd/run.sh
 Restart=on-failure
 RestartSec=60
+
+[Install]
+WantedBy=multi-user.target
