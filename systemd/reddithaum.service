@@ -1,5 +1,5 @@
 [Unit]
-Description=A fake service
+Description=An basic IRC bot for mapping Reddit to IRC
 After=mutli-user.target
 Requires=multi-user.target
 
