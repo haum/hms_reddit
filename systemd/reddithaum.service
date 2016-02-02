@@ -1,0 +1,11 @@
+[Unit]
+Description=A fake service
+After=mutli-user.target
+Requires=multi-user.target
+
+[Service]
+Type=simple
+User=reddithaum
+ExecStart=/home/reddithaum/reddithaum/systemd/run.sh
+Restart=on-failure
+RestartSec=60
