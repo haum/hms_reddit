@@ -31,6 +31,18 @@ Finally start the bot when you are in the repository root folder:
 
     $ python reddithaum
 
+Installing the systemd service
+------------------------------
+
+You need to copy the systemd service file onto your system and then enable and
+start it using the following commands:
+
+::
+
+    # cp systemd/reddithaum.service /etc/systemd/system/multi.user.target.wants/
+    # systemctl enable reddithaum
+    # systemctl start reddithaum
+
 License
 -------
 
