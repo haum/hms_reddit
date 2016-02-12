@@ -20,10 +20,14 @@
 
 from datetime import timedelta
 
-SLEEP = timedelta(seconds=60)
-RWDT = SLEEP - timedelta(seconds=1) # reverse watch dog timer
+# Reddit poll configuration
 
-CHAN = "#haum" # ne pas oublier le dièse avant
+POLL_REDDIT_EVERY = timedelta(seconds=60)
+REVERSE_WATCHDOG_TIMEOUT = POLL_REDDIT_EVERY - timedelta(seconds=1)
+
+# IRC Configuration
+
+CHAN = "#haum"  # do not forget the hash symbol at the beginning
 NICKNAME = "reddithaum"
 USER_AGENT = 'linux:org.haum.reddithaum:v1.1 (by /u/MicroJoe)'
 SERVER = 'irc.freenode.net'

@@ -39,7 +39,7 @@ class MyBot(irc.bot.SingleServerIRCBot):
     def __init__(self, channel, nickname, server, port=6667):
         super().__init__([(server, port)], nickname, nickname)
         self.channel = channel
-        self.rwatchdog = VeganWatchdog(settings.RWDT)
+        self.rwatchdog = VeganWatchdog(settings.REVERSE_WATCHDOG_TIMEOUT)
 
     def on_welcome(self, serv, ev):
         get_logger().info("Signed on")
@@ -48,8 +48,9 @@ class MyBot(irc.bot.SingleServerIRCBot):
 
     def on_join(self, serv, ev):
         get_logger().info("Joined {}".format(self.channel))
+
         self.connection.execute_every(
-            settings.SLEEP, self._check_submissions, (serv,))
+            settings.POLL_REDDIT_EVERY, self._check_submissions, (serv,))
         self._check_submissions(serv)
 
     def on_kick(self, serv, ev):
@@ -63,10 +64,12 @@ class MyBot(irc.bot.SingleServerIRCBot):
         serv.nick(newnick)
 
     def _check_submissions(self, serv):
+
         try:
             self.rwatchdog.feed()
         except RuntimeError:
-            get_logger().warning("Reverse watchdog interrupted get request")
+            get_logger().warning(
+                "Reverse watchdog interrupted request to Reddit API")
             return
 
         get_logger().info(
@@ -76,10 +79,13 @@ class MyBot(irc.bot.SingleServerIRCBot):
         try:
             for x in submissions:
                 m = "[{}] {} -> {}".format(x.author.name, x.title, x.url)
+
                 get_logger().info("Posting {}".format(x.id))
                 serv.privmsg(self.channel, m)
+
                 get_logger().info("Marking {} as posted".format(x.id))
                 mark_posted(x)
+
         except praw.errors.HTTPException:
             get_logger().warning(
                 "Could not retrieve data from Reddit (HTTP error)")
