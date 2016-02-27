@@ -1,8 +1,8 @@
 reddithaum
 ==========
 
-A small IRC bot that post the latest Reddit submissions on an IRC
-channel.
+A small microservice that poll Reddit and publish new posts to a RabbitMQ
+exchanger.
 
 Using
 -----
@@ -29,7 +29,7 @@ Finally start the bot when you are in the repository root folder:
 
 ::
 
-    $ python reddithaum
+    $ python run.py
 
 Installing the systemd service
 ------------------------------
@@ -46,5 +46,5 @@ start it using the following commands:
 License
 -------
 
-This project is brought to you under MIT license. For further
-information, please read the provided LICENSE file.
+This project is brought to you under MIT license. For further information,
+please read the provided LICENSE file.

@@ -7,6 +7,7 @@ This project adheres to `Semantic Versioning <http://semver.org/>`__.
 [Unreleased]
 ------------
 
+-  Moving from an IRC bot to a microservice over RabbitMQ
 -  Handling reddit downtimes
 
 [1.0] - 2015-12-24
