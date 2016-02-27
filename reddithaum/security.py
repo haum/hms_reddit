@@ -20,6 +20,7 @@
 
 from datetime import datetime
 
+
 class VeganWatchdog():
 
     """A reverse watchdog that will fail if triggerred too much"""
@@ -32,6 +33,6 @@ class VeganWatchdog():
         now = datetime.now()
 
         if self.last_call is not None and now - self.last_call < self.mintime:
-            raise RuntimeError
+            raise RuntimeError('Vegan watchdog was feeded too fast')
 
         self.last_call = now

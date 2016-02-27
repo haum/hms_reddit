@@ -40,7 +40,7 @@ def step_impl(context):
 @given('que les nouveaux liens ont été vérifiés "{seconds:d}" secondes auparavant')
 def step_impl(context, seconds):
     before = datetime.now() - timedelta(seconds=seconds)
-    context.retriever.last_retrieve = before
+    context.retriever.watchdog.last_call = before
 
 @then('aucune erreur ne se produit')
 def step_impl(context):

@@ -23,12 +23,12 @@ import time
 
 from requests.exceptions import ReadTimeout
 
-import settings
-from retrieve import Retriever
-from notify import Notifier
+from reddithaum import settings
+from reddithaum.retrieve import Retriever
+from reddithaum.notify import Notifier
 
 
-if __name__ == "__main__":
+def run():
     logging.basicConfig(
         format='%(asctime)-15s [%(levelname)s] (%(name)s) %(message)s',
         level=logging.INFO)
@@ -45,4 +45,4 @@ if __name__ == "__main__":
         except RuntimeError as e:
             logging.error(e)
         finally:
-            time.sleep(3)
+            time.sleep(settings.POLL_REDDIT_EVERY.seconds)

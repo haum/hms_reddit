@@ -24,6 +24,7 @@ from datetime import datetime, timedelta
 import praw
 
 from reddithaum import settings
+from reddithaum.security import VeganWatchdog
 
 
 def get_logger():
@@ -48,8 +49,8 @@ def init_file():
 
 class Retriever:
     def __init__(self, notifier):
-        self.last_retrieve = None
         self.notifier = notifier
+        self.watchdog = VeganWatchdog(settings.POLL_REDDIT_EVERY)
 
     def _retrieve_submissions(self):
         """Retrieve data from Reddit API."""
@@ -73,17 +74,13 @@ class Retriever:
 
         """
 
-        if self.last_retrieve is not None and \
-           self.last_retrieve > datetime.now() - timedelta(seconds=60):
-            raise RuntimeError('Check submission is too fast')
+        self.watchdog.feed()
 
         subs = self._retrieve_submissions()
 
         for sub in subs:
             self.notifier.notify(sub)
             mark_posted(sub)
-
-        self.last_retrieve = datetime.now()
 
 
 if __name__ == "__main__":
