@@ -19,20 +19,30 @@
 # THE SOFTWARE.
 
 import logging
-
-from bot import MyBot
-import settings
+import time
 
 from requests.exceptions import ReadTimeout
 
+import settings
+from retrieve import Retriever
+from notify import Notifier
+
 
 if __name__ == "__main__":
-    logging.basicConfig(format='%(asctime)-15s [%(levelname)s] (%(name)s) %(message)s', level=logging.INFO)
-    bot = MyBot(settings.CHAN, settings.NICKNAME, settings.SERVER)
+    logging.basicConfig(
+        format='%(asctime)-15s [%(levelname)s] (%(name)s) %(message)s',
+        level=logging.INFO)
+
+    no = Notifier(settings.RABBIT_ADDR, settings.RABBIT_EXCHANGER)
+    ret = Retriever(no)
 
     while True:
         try:
-            logging.info('Starting bot')
-            bot.start()
+            logging.info('Checking new submissions...')
+            ret.check_submissions()
         except ReadTimeout:
             logging.error('Read timeout, restarting bot.')
+        except RuntimeError as e:
+            logging.error(e)
+        finally:
+            time.sleep(3)

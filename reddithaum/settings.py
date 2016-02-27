@@ -24,10 +24,9 @@ from datetime import timedelta
 
 POLL_REDDIT_EVERY = timedelta(seconds=60)
 REVERSE_WATCHDOG_TIMEOUT = POLL_REDDIT_EVERY - timedelta(seconds=1)
+USER_AGENT = 'linux:org.haum.reddithaum:v2.0 (by /u/MicroJoe)'
 
-# IRC Configuration
+# RabbitMQ configuration
 
-CHAN = "#haum"  # do not forget the hash symbol at the beginning
-NICKNAME = "reddithaum"
-USER_AGENT = 'linux:org.haum.reddithaum:v1.1 (by /u/MicroJoe)'
-SERVER = 'irc.freenode.net'
+RABBIT_ADDR = '10.1.0.1'
+RABBIT_EXCHANGER = 'haum'
