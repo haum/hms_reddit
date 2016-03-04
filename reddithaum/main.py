@@ -22,27 +22,32 @@ import logging
 import time
 
 from requests.exceptions import ReadTimeout
+import coloredlogs
 
 from reddithaum import settings
 from reddithaum.retrieve import Retriever
 from reddithaum.notify import Notifier
 
 
-def run():
-    logging.basicConfig(
-        format='%(asctime)-15s [%(levelname)s] (%(name)s) %(message)s',
-        level=logging.INFO)
+def get_logger():
+    return logging.getLogger(__name__)
 
-    no = Notifier(settings.RABBIT_ADDR, settings.RABBIT_EXCHANGER)
+def run():
+    # Logging
+    coloredlogs.install(level='INFO')
+
+    # Create objects
+    no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
     ret = Retriever(no)
 
+    # Poll
     while True:
         try:
-            logging.info('Checking new submissions...')
+            get_logger().info('Checking new submissions...')
             ret.check_submissions()
         except ReadTimeout:
-            logging.error('Read timeout, restarting bot.')
+            get_logger().error('Read timeout, restarting bot.')
         except RuntimeError as e:
-            logging.error(e)
+            get_logger().error(e)
         finally:
             time.sleep(settings.POLL_REDDIT_EVERY.seconds)

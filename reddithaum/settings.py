@@ -28,5 +28,6 @@ USER_AGENT = 'linux:org.haum.reddithaum:v2.0 (by /u/MicroJoe)'
 
 # RabbitMQ configuration
 
-RABBIT_ADDR = '10.1.0.1'
+RABBIT_HOST = 'localhost'
 RABBIT_EXCHANGER = 'haum'
+RABBIT_ROUTING_KEY = 'reddit'
