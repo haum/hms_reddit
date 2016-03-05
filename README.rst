@@ -25,7 +25,7 @@ start it using the following commands:
 
 ::
 
-    # cp systemd/reddithaum.service /etc/systemd/system/multi.user.target.wants/
+    # make install
     # systemctl enable reddithaum
     # systemctl start reddithaum
 

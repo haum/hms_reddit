@@ -1,6 +1,6 @@
 
 SERVICE:=hms_reddit.service
-SYSTEMD_DIR:=/etc/systemd/system/multi-user.target.wants/
+SYSTEMD_DIR:=/usr/lib/systemd/system/
 SERVICE_PATH:=$(SYSTEMD_DIR)/$(SERVICE)
 
 all:
