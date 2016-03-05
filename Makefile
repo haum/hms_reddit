@@ -1,6 +1,6 @@
 
 SERVICE:=hms_reddit.service
-SYSTEMD_DIR:=/usr/lib/systemd/system/
+SYSTEMD_DIR:=/lib/systemd/system/
 SERVICE_PATH:=$(SYSTEMD_DIR)/$(SERVICE)
 
 all:
