@@ -1,5 +1,5 @@
 #!/bin/sh
 
-cd /home/reddithaum/reddithaum/
+cd /home/hms_irc/hms_irc/
 . ./venv/bin/activate
 exec python run.py
