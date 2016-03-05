@@ -2,4 +2,4 @@
 
 cd /home/reddithaum/reddithaum/
 . ./venv/bin/activate
-exec python reddithaum/
+exec python run.py

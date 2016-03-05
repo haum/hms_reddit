@@ -1,11 +1,11 @@
 [Unit]
-Description=An basic IRC bot for mapping Reddit to IRC
+Description=HAUM's Reddit microservice
 After=mutli-user.target
 Requires=multi-user.target
 
 [Service]
 Type=simple
-User=reddithaum
+User=hms_reddit
 ExecStart=/home/reddithaum/reddithaum/systemd/run.sh
 Restart=on-failure
 RestartSec=3600
