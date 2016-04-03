@@ -28,9 +28,12 @@ from reddithaum import settings
 from reddithaum.retrieve import Retriever
 from reddithaum.notify import Notifier
 
+from pika.exceptions import ConnectionClosed
+
 
 def get_logger():
     return logging.getLogger(__name__)
+
 
 def run():
     # Logging
@@ -47,6 +50,9 @@ def run():
             ret.check_submissions()
         except ReadTimeout:
             get_logger().error('Read timeout, restarting bot.')
+        except ConnectionClosed:
+            get_logger().error('Disconnected from RabbitMQ, restarting bot.')
+            no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
         except RuntimeError as e:
             get_logger().error(e)
         finally:
