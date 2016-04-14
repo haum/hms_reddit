@@ -56,6 +56,7 @@ def run():
                 get_logger().error(
                     'Disconnected from RabbitMQ, restarting bot.')
                 no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
+                ret = Retriever(no)
             except RuntimeError as e:
                 get_logger().error(e)
             finally:
