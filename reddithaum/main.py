@@ -36,6 +36,24 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
+def poll_loop(no, ret):
+    while True:
+        try:
+            get_logger().info('Checking new submissions...')
+            ret.check_submissions()
+        except ReadTimeout:
+            get_logger().error('Read timeout, restarting bot.')
+        except ConnectionClosed:
+            get_logger().error(
+                'Disconnected from RabbitMQ, restarting bot.')
+            no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
+            ret = Retriever(no)
+        except RuntimeError as e:
+            get_logger().error(e)
+        finally:
+            time.sleep(settings.POLL_REDDIT_EVERY.seconds)
+
+
 def run():
     # Logging
     coloredlogs.install(level='INFO')
@@ -46,21 +64,7 @@ def run():
 
     # Poll
     try:
-        while True:
-            try:
-                get_logger().info('Checking new submissions...')
-                ret.check_submissions()
-            except ReadTimeout:
-                get_logger().error('Read timeout, restarting bot.')
-            except ConnectionClosed:
-                get_logger().error(
-                    'Disconnected from RabbitMQ, restarting bot.')
-                no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
-                ret = Retriever(no)
-            except RuntimeError as e:
-                get_logger().error(e)
-            finally:
-                time.sleep(settings.POLL_REDDIT_EVERY.seconds)
+        poll_loop(no, ret)
     except KeyboardInterrupt:
         get_logger().critical("Got a KeyboardInterrupt")
         get_logger().info("Disconnecting from RabbitMQ")
