@@ -24,7 +24,8 @@ class Notifier:
         self.channel = self.conn.channel()
 
         get_logger().info("Declaring exchanger...")
-        self.channel.exchange_declare(exchange=exchanger, type='direct')
+        self.channel.exchange_declare(exchange=exchanger,
+                                      exchange_type='direct')
 
     def notify(self, obj):
 
