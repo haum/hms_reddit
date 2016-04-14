@@ -40,3 +40,6 @@ class Notifier:
             exchange=self.exchanger,
             routing_key=self.routing_key,
             body=json.dumps(to_send))
+
+    def disconnect(self):
+        self.conn.close()
