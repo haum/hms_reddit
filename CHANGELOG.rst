@@ -7,6 +7,8 @@ This project adheres to `Semantic Versioning <http://semver.org/>`__.
 [Unreleased]
 ------------
 
+-  Answers to ping requests
+-  Using RabbitClient instead of reimplementation
 -  Moving from an IRC bot to a microservice over RabbitMQ
 -  Handling reddit downtimes
 

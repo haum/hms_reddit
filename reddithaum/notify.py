@@ -1,9 +1,8 @@
 import logging
-import json
 
-import pika
 
 from reddithaum import settings
+from reddithaum.rabbit import RabbitClient
 
 
 def get_logger():
@@ -12,20 +11,12 @@ def get_logger():
 
 class Notifier:
     def __init__(self, addr, exchanger):
-        self.exchanger = exchanger
+
+        # Create rabbit client
         self.routing_key = settings.RABBIT_ROUTING_KEY
+        self.client = RabbitClient(exchange=exchanger, routing_keys=['ping'])
 
-        params = pika.ConnectionParameters(addr)
-
-        get_logger().info("Connecting to RabbitMQ server...")
-        self.conn = pika.BlockingConnection(params)
-
-        get_logger().info("Creating channel...")
-        self.channel = self.conn.channel()
-
-        get_logger().info("Declaring exchanger...")
-        self.channel.exchange_declare(
-            exchange=exchanger, exchange_type='direct')
+        self.client.connect(settings.RABBIT_HOST)
 
     def notify(self, obj):
 
@@ -37,7 +28,4 @@ class Notifier:
         get_logger().info("Publishing message with routing key {}".format(
             self.routing_key))
 
-        self.channel.basic_publish(
-            exchange=self.exchanger,
-            routing_key=self.routing_key,
-            body=json.dumps(to_send))
+        self.client.publish(self.routing_key, to_send)
