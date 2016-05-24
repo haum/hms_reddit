@@ -1,4 +1,5 @@
 import logging
+import threading
 
 
 from reddithaum import settings
@@ -17,6 +18,12 @@ class Notifier:
         self.client = RabbitClient(exchange=exchanger, routing_keys=['ping'])
 
         self.client.connect(settings.RABBIT_HOST)
+
+        def thread():
+            self.client.consume()
+
+        self.consume_thread = threading.Thread(target=thread, daemon=True)
+        self.consume_thread.start()
 
     def notify(self, obj):
 
