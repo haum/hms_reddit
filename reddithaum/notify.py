@@ -29,3 +29,6 @@ class Notifier:
             self.routing_key))
 
         self.client.publish(self.routing_key, to_send)
+
+    def disconnect(self):
+        self.client.disconnect()
