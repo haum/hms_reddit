@@ -2,4 +2,4 @@
 
 cd /home/hms_reddit/hms_reddit/
 . ./venv/bin/activate
-exec python run.py
+exec hms_reddit
