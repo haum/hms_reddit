@@ -25,9 +25,9 @@ import time
 from requests.exceptions import ReadTimeout
 import coloredlogs
 
-from reddithaum import settings
-from reddithaum.retrieve import Retriever
-from reddithaum.notify import Notifier
+from hms_reddit import settings
+from hms_reddit.retrieve import Retriever
+from hms_reddit.notify import Notifier
 
 from pika.exceptions import ConnectionClosed
 
@@ -54,7 +54,7 @@ def poll_loop(no, ret):
             time.sleep(settings.POLL_REDDIT_EVERY.seconds)
 
 
-def run():
+def main():
     # Logging
     coloredlogs.install(level='INFO')
 

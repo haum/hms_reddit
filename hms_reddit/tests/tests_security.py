@@ -1,7 +1,7 @@
 import unittest
 from datetime import datetime, timedelta
 
-from reddithaum.security import VeganWatchdog
+from hms_reddit.security import VeganWatchdog
 
 
 class TestVeganWatchdog(unittest.TestCase):

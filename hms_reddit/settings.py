@@ -24,10 +24,10 @@ from datetime import timedelta
 
 POLL_REDDIT_EVERY = timedelta(seconds=60)
 REVERSE_WATCHDOG_TIMEOUT = POLL_REDDIT_EVERY - timedelta(seconds=1)
-USER_AGENT = 'linux:org.haum.reddithaum:v2.0 (by /u/MicroJoe)'
+USER_AGENT = 'linux:org.haum.hms_reddit:v2.0 (by /u/MicroJoe)'
 
 # RabbitMQ configuration
 
 RABBIT_HOST = 'localhost'
 RABBIT_EXCHANGER = 'haum'
-RABBIT_ROUTING_KEY = 'reddit'
+RABBIT_TOPIC = 'reddit'

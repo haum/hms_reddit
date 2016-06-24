@@ -2,8 +2,9 @@ import logging
 import threading
 
 
-from reddithaum import settings
-from reddithaum.rabbit import RabbitClient
+from hms_base.client import Client
+
+from hms_reddit import settings
 
 
 def get_logger():
@@ -14,8 +15,8 @@ class Notifier:
     def __init__(self, addr, exchanger):
 
         # Create rabbit client
-        self.routing_key = settings.RABBIT_ROUTING_KEY
-        self.client = RabbitClient(exchange=exchanger, routing_keys=['ping'])
+        self.topic = settings.RABBIT_TOPIC
+        self.client = Client('hms_reddit', settings.RABBIT_EXCHANGER, [])
 
         self.client.connect(settings.RABBIT_HOST)
 
@@ -33,9 +34,9 @@ class Notifier:
         to_send = obj
 
         get_logger().info("Publishing message with routing key {}".format(
-            self.routing_key))
+            self.topic))
 
-        self.client.publish(self.routing_key, to_send)
+        self.client.publish(self.topic, to_send)
 
     def disconnect(self):
         self.client.disconnect()

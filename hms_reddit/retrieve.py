@@ -23,8 +23,8 @@ from datetime import datetime, timedelta
 
 import praw
 
-from reddithaum import settings
-from reddithaum.security import VeganWatchdog
+from hms_reddit import settings
+from hms_reddit.security import VeganWatchdog
 
 
 def get_logger():
