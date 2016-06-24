@@ -1,0 +1,6 @@
+#!/bin/env python3
+
+from hms_reddit.main import main
+
+if __name__ == "__main__":
+    main()

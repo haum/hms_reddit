@@ -1,6 +1,6 @@
 from unittest.mock import Mock
 
-from reddithaum.retrieve import Retriever
+from hms_reddit.retrieve import Retriever
 
 
 def before_all(context):
