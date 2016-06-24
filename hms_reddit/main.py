@@ -50,6 +50,8 @@ def poll_loop(no, ret):
             ret = Retriever(no)
         except RuntimeError as e:
             get_logger().error(e)
+        except KeyboardInterrupt:
+            return
         finally:
             time.sleep(settings.POLL_REDDIT_EVERY.seconds)
 

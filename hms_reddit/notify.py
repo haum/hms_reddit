@@ -21,7 +21,7 @@ class Notifier:
         self.client.connect(settings.RABBIT_HOST)
 
         def thread():
-            self.client.consume()
+            self.client.start_consuming()
 
         self.consume_thread = threading.Thread(target=thread, daemon=True)
         self.consume_thread.start()
