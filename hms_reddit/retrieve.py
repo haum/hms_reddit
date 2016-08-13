@@ -55,6 +55,7 @@ class Retriever:
     def _retrieve_submissions(self):
         """Retrieve data from Reddit API."""
         r = praw.Reddit(user_agent=settings.USER_AGENT)
+
         submissions = r.get_subreddit('haum').get_hot(limit=5)
 
         for sub in filter(lambda x: not already_posted(x), submissions):
@@ -76,7 +77,11 @@ class Retriever:
 
         self.watchdog.feed()
 
-        subs = self._retrieve_submissions()
+        subs = []
+        try:
+            subs = self._retrieve_submissions()
+        except praw.errors.HTTPException as e:
+            get_logger().error("HTTPException from praw : {}".format(e))
 
         for sub in subs:
             self.notifier.notify(sub)
