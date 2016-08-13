@@ -11,5 +11,5 @@ install:
 	cp systemd/$(SERVICE) $(SERVICE_PATH)
 
 uninstall:
-	-systemctl disable $(SERVICE)
+	systemctl disable $(SERVICE)
 	rm $(SERVICE_PATH)
