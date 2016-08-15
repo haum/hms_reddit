@@ -10,7 +10,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='hms_reddit',
-    version='2.0.1',
+    version='2.1',
     packages=['hms_reddit', 'hms_reddit.tests'],
     scripts=['bin/hms_reddit'],
 
@@ -33,7 +33,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
 
-    install_requires=['pika', 'hms_base>1.0,<2', 'irc', 'coloredlogs', 'praw'],
+    install_requires=['pika', 'hms_base>=2.0,<3', 'irc', 'coloredlogs', 'praw'],
 
     test_suite='nose.collector',
     tests_require=['nose'],

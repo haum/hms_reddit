@@ -7,6 +7,14 @@ This project adheres to `Semantic Versioning <http://semver.org/>`__.
 [Unreleased]
 ------------
 
+[2.1] - 2015-08-15
+------------------
+
+- Using ``hms_base`` version 2
+
+[2.0] - 2015-06-24
+------------------
+
 - Using package ``hms_base`` instead of copying its source code
 - Using ``setup.py`` packaging for easier installation, dependency management
   and use
