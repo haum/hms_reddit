@@ -31,34 +31,51 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
-def already_posted(sub):
-    with open('posted') as f:
-        posted = f.read().splitlines()
-        return sub.id in posted
+class PostDatabase:
 
+    """Class containing static calls for post database handling"""
 
-def mark_posted(sub):
-    with open('posted', 'a') as f:
-        f.write(sub['id'] + '\n')
+    @staticmethod
+    def already_posted(sub):
+        """Check if a post was already posted."""
+        with open('posted') as f:
+            posted = f.read().splitlines()
+            return sub.id in posted
 
+    @staticmethod
+    def mark_posted(sub):
+        """Mark a post as posted."""
+        with open('posted', 'a') as f:
+            f.write(sub['id'] + '\n')
 
-def init_file():
-    with open('posted', 'w') as f:
-        f.flush()
+    @staticmethod
+    def init_file():
+        """Creates the empty database file."""
+        with open('posted', 'w') as f:
+            f.flush()
 
 
 class Retriever:
+
+    """Object used to retrieve Reddit news using the praw library."""
+
     def __init__(self, notifier):
+        """Default constructor."""
         self.notifier = notifier
         self.watchdog = VeganWatchdog(settings.POLL_REDDIT_EVERY)
 
     def _retrieve_submissions(self):
-        """Retrieve data from Reddit API."""
-        r = praw.Reddit(user_agent=settings.USER_AGENT)
+        """Retrieve new posts from Reddit API."""
 
+        # Retrieve posts
+        r = praw.Reddit(user_agent=settings.USER_AGENT)
         submissions = r.get_subreddit('haum').get_hot(limit=5)
 
-        for sub in filter(lambda x: not already_posted(x), submissions):
+        # We only yield the submissions that we did not already posted
+        filtered_subs = filter(
+            lambda x: not PostDatabase.already_posted(x), submissions)
+
+        for sub in filtered_subs:
             yield {
                 'id': sub.id,
                 'author': sub.author.name,
@@ -75,18 +92,24 @@ class Retriever:
 
         """
 
+        # Feed the watchdog that will raise an exception if called too often in
+        # order to protect the bot from being banned
         self.watchdog.feed()
 
+        # Retrieve new posts, handling possible HTTP error
         subs = []
         try:
             subs = self._retrieve_submissions()
         except praw.errors.HTTPException as e:
             get_logger().error("HTTPException from praw : {}".format(e))
 
+        # Notify each new post and mark it as already posted
         for sub in subs:
             self.notifier.notify(sub)
-            mark_posted(sub)
+            PostDatabase.mark_posted(sub)
 
 
+# If this module is started standalone, we want to create the empty database
+# file
 if __name__ == "__main__":
-    init_file()
+    PostDatabase.init_file()

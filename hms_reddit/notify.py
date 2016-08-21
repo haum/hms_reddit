@@ -12,7 +12,10 @@ def get_logger():
 
 
 class Notifier:
-    def __init__(self, addr, exchanger):
+
+    """Class used to speak with the RabbitMQ server."""
+
+    def __init__(self):
 
         # Create rabbit client
         self.topic = settings.RABBIT_TOPIC

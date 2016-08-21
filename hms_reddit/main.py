@@ -36,37 +36,50 @@ def get_logger():
     return logging.getLogger(__name__)
 
 
-def poll_loop(no, ret):
+def poll_loop():
     while True:
         try:
+            # Check new submissions, and eventually notify them
             get_logger().info('Checking new submissions...')
             ret.check_submissions()
+
         except ReadTimeout:
+            # API read timeout that sometimes happens
             get_logger().error('Read timeout, restarting bot.')
+
         except ConnectionClosed:
+            # Sometimes RabbitMQ connection will time out if not used, we have
+            # to connect back to the server.
             get_logger().error(
                 'Disconnected from RabbitMQ, restarting bot.')
-            no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
+
+            # Recreate objects in order to reconnect to the server
+            no = Notifier()
             ret = Retriever(no)
+
         except RuntimeError as e:
+            # Other error, we catch it in order to not crash the bot
             get_logger().error(e)
 
+        # Sleep before next poll
         for _ in range(settings.POLL_REDDIT_EVERY.seconds):
             time.sleep(1)
 
 
 def main():
-    # Logging
+    # Install logger
     coloredlogs.install(level='INFO')
 
     # Create objects
-    no = Notifier(settings.RABBIT_HOST, settings.RABBIT_EXCHANGER)
+    no = Notifier()
     ret = Retriever(no)
 
-    # Poll
+    # Start infinite poll loop
     try:
         poll_loop(no, ret)
+
     except KeyboardInterrupt:
+        # Graceful shutdown on SIGINT
         get_logger().critical("Got a KeyboardInterrupt")
         get_logger().info("Disconnecting from RabbitMQ")
         no.disconnect()
